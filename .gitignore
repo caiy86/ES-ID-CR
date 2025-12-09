@@ -1,0 +1,9 @@
+logs/
+__pycache__/
+data_store/
+figures/
+logs/
+results/
+main_opt.out
+recode.md
+temp.py
