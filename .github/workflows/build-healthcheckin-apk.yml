@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - tmp-healthcheckin-apk-build
+      - tmp-healthcheckin-apk-v2
 
 permissions:
   contents: read
@@ -12,38 +13,25 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Java 17
-        uses: actions/setup-java@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '17'
-
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
-
-      - name: Install Android SDK packages
-        run: |
+      - uses: android-actions/setup-android@v3
+      - run: |
           yes | sdkmanager --licenses >/dev/null || true
           sdkmanager "platforms;android-35" "build-tools;35.0.0"
-
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v4
+      - uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '8.11.1'
-
       - name: Build APK
         working-directory: healthcheckin-apk
         run: gradle :app:assembleDebug --stacktrace
-
       - name: Prepare APK
-        run: cp healthcheckin-apk/app/build/outputs/apk/debug/app-debug.apk "身体恢复打卡_V1.apk"
-
-      - name: Upload APK
-        uses: actions/upload-artifact@v4
+        run: cp healthcheckin-apk/app/build/outputs/apk/debug/app-debug.apk "身体恢复打卡_V2.apk"
+      - uses: actions/upload-artifact@v4
         with:
-          name: healthcheckin-apk
-          path: 身体恢复打卡_V1.apk
+          name: healthcheckin-apk-v2
+          path: 身体恢复打卡_V2.apk
           retention-days: 1
