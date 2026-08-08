@@ -39,8 +39,17 @@ public class MainActivity extends Activity {
 
         webView = new WebView(this);
         WebSettings s = webView.getSettings();
-        s.setJavaScriptEnabled(true); s.setDomStorageEnabled(true); s.setAllowFileAccess(true); s.setAllowContentAccess(true);
-        webView.setWebViewClient(new WebViewClient());
+        s.setJavaScriptEnabled(true);
+        s.setDomStorageEnabled(true);
+        s.setAllowFileAccess(true);
+        s.setAllowContentAccess(true);
+        webView.setWebViewClient(new WebViewClient() {
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                super.onPageFinished(view, url);
+                view.evaluateJavascript("(function(){var s=document.createElement('script');s.src='month-plan.js';document.body.appendChild(s);})();", null);
+            }
+        });
         webView.setWebChromeClient(new WebChromeClient() {
             @Override public boolean onShowFileChooser(WebView webView, ValueCallback<Uri[]> cb, FileChooserParams params) {
                 if (filePathCallback != null) filePathCallback.onReceiveValue(null);
